@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String[] columnas = {"a","b","c","d","e","f","g","h","i","j","k"};
     private EditText[][] casillas;
+    private boolean[][] ocupada;
 
     private Button btnReset, btnFinish;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtPista2 = findViewById(R.id.txtPista2);
 
         casillas = new EditText[11][11];
+        ocupada = new boolean[11][11];
         for (int x = 0; x < 11; x++) {
             for (int y = 0; y < 11; y++) {
                 //Genera los diferentes ID mediante los valores del for
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 casillas[x][y].setBackgroundColor(getResources().getColor(R.color.colorBlack));
                 casillas[x][y].setFilters(new InputFilter[]{new InputFilter.LengthFilter(0)});
+                ocupada[x][y] = false;
             }
         }
 
@@ -96,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int y = 0; y < 11; y++) {
                 casillas[x][y].setText("");
                 casillas[x][y].setBackgroundColor(getResources().getColor(R.color.colorBlack));
-                casillas[x][y].setTag(null);
+                casillas[x][y].setTag(R.string.tag1,null);
+                casillas[x][y].setTag(R.string.tag2, null);
             }
         }
 
@@ -178,23 +182,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Palabra palabra = palabras.get(0);
             int length = palabra.getPalabra().length();
             HashMap<String, Palabra> tag = new HashMap<>();
-            if ((firstX + (length - 1)) < 11) {
+            if((firstX + (length - 1)) < 11){
                 palabra.setDireccion(true);
                 tag.put("horizontal", palabra);
-                for (int i = 0; i < length; i++) {
+                for(int i = 0; i < length; i++){
                     casillas[firstX + i][firstY].setTag(R.string.tag1,tag);
                     casillas[firstX + i][firstY].setTag(R.string.tag2,palabra.getPalabra().charAt(i));
                     casillas[firstX + i][firstY].setBackgroundColor(getResources().getColor(R.color.colorWhite));
                     casillas[firstX + i][firstY].setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
                 }
                 acomodo = true;
-            } else if ((firstY + (length - 1)) < 11) {
+            }else if((firstY + (length - 1)) < 11){
                 palabra.setDireccion(false);
                 tag.put("vertical", palabra);
-                for (int i = 0; i < length; i++) {
+                for(int i = 0; i < length; i++){
                     casillas[firstX][firstY + i].setTag(R.string.tag1,tag);
                     casillas[firstX][firstY + i].setTag(R.string.tag2,palabra.getPalabra().charAt(i));
-                    casillas[firstX][firstY+ i].setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                    casillas[firstX][firstY + i].setBackgroundColor(getResources().getColor(R.color.colorWhite));
                     casillas[firstX][firstY + i].setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
                 }
                 acomodo = true;
@@ -202,10 +206,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }while(!acomodo);
 
         List<Palabra> otrasPalabras = palabras.subList(1, palabras.size());
-        for (Palabra palabra: otrasPalabras) {
+        for (Palabra palabra: otrasPalabras)
             if(gridCheck(palabra))
                 validCounter++;
-        }
 
         if(validCounter < 2)
             valido = false;
@@ -229,59 +232,131 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(caract != null){
                     for (int l = 0; l < palabra.getPalabra().length(); l++){
                         if(palabra.getPalabra().toUpperCase().charAt(l) == caract.toUpperCase().charAt(0)){
-                            HashMap<String, Palabra> palabraGrid = (HashMap<String,Palabra>) casillas[x][y].getTag(R.string.tag1);
-                            if(palabraGrid.containsKey("horizontal")){
-                                if(y - l + (palabra.getPalabra().length()-1) < 11 && y - l > 0 ){
-                                    for (int y2 = 0; y2 < palabra.getPalabra().length(); y2++) {
-                                        HashMap<String, Palabra> tag = new HashMap<>();
-                                        tag.put("vertical", palabra);
-                                        casillas[x][(y-l)+y2].setTag(R.string.tag1,tag);
-                                        casillas[x][(y-l)+y2].setTag(R.string.tag2,palabra.getPalabra().charAt(y2));
-                                        casillas[x][(y-l)+y2].setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                                        casillas[x][(y-l)+y2].setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
-                                    }
-                                    valid = true;
+                            HashMap<String, Palabra> tag= (HashMap<String,Palabra>) casillas[x][y].getTag(R.string.tag1);
+                            //VERTICAL
+                            if(tag.containsKey("horizontal") && !tag.containsKey("vertical")){
+                                if(y - l + (palabra.getPalabra().length()-1) < 11 && y - l >= 0 ) {
+                                    if (borderCheckVertical(x, y, l, palabra.getPalabra().length())){
+                                        palabra.setInicio(new int[]{x,y-l});
+                                        palabra.setFin(new int[]{x,y+(palabra.getPalabra().length()-l)});
+                                        palabra.setDireccion(false);
+                                        for (int y2 = 0; y2 < palabra.getPalabra().length(); y2++) {
+                                            HashMap<String, Palabra> tagTemp = new HashMap<>();
+                                            tagTemp.put("vertical", palabra);
+                                            if (y2 - l == 0)
+                                                tagTemp.put("horizontal", tag.get("horizontal"));
+
+                                            casillas[x][(y - l) + y2].setTag(R.string.tag1,tagTemp);
+                                            casillas[x][(y - l) + y2].setTag(R.string.tag2, palabra.getPalabra().charAt(y2));
+                                            casillas[x][(y - l) + y2].setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                                            casillas[x][(y - l) + y2].setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
+
+                                        }
+                                        valid = true;
+                                    }//if borderCheck
+
+                                }//if length < 11
+                                breakout = true;
+                                break;
+                            //HORIZONTAL
+                            }else if(tag.containsKey("vertical") && !tag.containsKey("horizontal")){
+                                if(x - l + (palabra.getPalabra().length()-1) < 11 && x - l >= 0 ){
+                                    if(borderCheckHorizontal(x,y,l,palabra.getPalabra().length())) {
+                                        palabra.setInicio(new int[]{x-l,y});
+                                        palabra.setFin(new int[]{x+(palabra.getPalabra().length()-l),y});
+                                        palabra.setDireccion(true);
+                                        for (int x2 = 0; x2 < palabra.getPalabra().length(); x2++) {
+                                            HashMap<String, Palabra> tagTemp = new HashMap<>();
+                                            tagTemp.put("horizontal", palabra);
+                                            if (x2 - l == 0)
+                                                tagTemp.put("vertical", tag.get("vertical"));
+
+                                            casillas[(x-l)+x2][y].setTag(R.string.tag1,tagTemp);
+                                            casillas[(x - l) + x2][y].setTag(R.string.tag2, palabra.getPalabra().charAt(x2));
+                                            casillas[(x - l) + x2][y].setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                                            casillas[(x - l) + x2][y].setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
+
+                                        }//end for x2
+                                        valid = true;
+                                    }//if bordercheck
+
                                 }
                                 breakout = true;
                                 break;
-                            }else{
-                                if(x - l + (palabra.getPalabra().length()-1) < 11 && x - l > 0 ){
-                                    for (int x2 = 0; x2 < palabra.getPalabra().length(); x2++) {
-                                        HashMap<String, Palabra> tag = new HashMap<>();
-                                        tag.put("horizontal", palabra);
-                                        casillas[(x-l)+x2][y].setTag(R.string.tag1,tag);
-                                        casillas[(x-l)+x2][y].setTag(R.string.tag2,palabra.getPalabra().charAt(x2));
-                                        casillas[(x-l)+x2][y].setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                                        casillas[(x-l)+x2][y].setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
-                                    }
-                                    valid = true;
-                                }
-                                breakout = true;
-                                break;
-                            }
-                        }
-                    }
+                            }//else-if horizontal/vertical
+                        }//if coincidencia letras
+                    }//for comparar letras con palabras
                 }
                 if(breakout)
                     break;
-            }
+            }//for y
             if(breakout)
                 break;
+        }//for x
+
+        return valid;
+    }
+
+    public boolean borderCheckVertical(int x, int y, int l, int length){
+        boolean valid = true;
+
+        //Revisar que la casilla superior esta vacia
+        if(y-1 >= 0)
+            if(casillas[x][y-1].getTag(R.string.tag1) != null)
+                valid = false;
+
+        //Revisar que la casilla inferior esta vacia
+        if(y+1 <= 10)
+            if(casillas[x][y+1].getTag(R.string.tag1) != null)
+                valid = false;
+
+        for (int i = 0; i < length; i++) {
+            if(i != l){
+                if(x != 0)
+                    if(casillas[x-1][y - (l - i)].getTag(R.string.tag1) != null)
+                        valid = false;
+                if(x != 10)
+                    if(casillas[x+1][y - (l - i)].getTag(R.string.tag1) != null)
+                        valid = false;
+
+            }
         }
 
         return valid;
     }
-//    Runnable longClickRunnable = new Runnable() {
-//        public void run() {
-//            Toast.makeText(MainActivity.this, "Ya le picaste mucho", Toast.LENGTH_SHORT).show();
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                v.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
-//            }else{
-//                v.vibrate(200);
-//            }
-//            longClick = true;
-//        }
-//    };
+
+    //Revisa que no choque con otra palabra en horizontal
+    public boolean borderCheckHorizontal(int x, int y, int l, int length){
+        boolean valid = true;
+
+        //Revisar que la casilla a la izquierda esta vacia
+        if(x-1 >= 0)
+            if(casillas[x-1][y].getTag(R.string.tag1) != null)
+                valid = false;
+
+        //Revisar que la casilla a la derecha esta vacia
+        if(x+1 <= 10)
+            if(casillas[x+1][y].getTag(R.string.tag1) != null)
+                valid = false;
+
+        //Revisar que las casillas de arriba estan vacias
+        for (int i = 0; i < length; i++) {
+            //Si es la letra coincidencia no la revisa
+            if(i != l) {
+                //Casilla abajo
+                if(y!=0)
+                    if(casillas[x - (l - i)][y - 1].getTag(R.string.tag1) != null)
+                        valid = false;
+
+                //Casilla arriba
+                if(y!=10)
+                    if(casillas[x - (l - i)][y + 1].getTag(R.string.tag1) != null)
+                        valid = false;
+            }
+        }
+
+        return valid;
+    }
 
     final Handler handler = new Handler();
     public Runnable timerRunnable = new Runnable() {

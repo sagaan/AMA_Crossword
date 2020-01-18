@@ -6,37 +6,37 @@
     <string name="btnSubmit">TERMINAR</string>
 
     <!--PALABRAS CRUCIGRAMA-->
-    <string name="palabra1">AAAA</string>
-    <string name="pista1">Apellido de Rocky</string>
+    <string name="palabra1">LEON</string>
+    <string name="pista1">Felino</string>
 
-    <string name="palabra2">Diez</string>
-    <string name="pista2">Numero de mandamientos</string>
+    <string name="palabra2">PERRO</string>
+    <string name="pista2">Canino domestico</string>
 
-    <string name="palabra3">CV</string>
-    <string name="pista3">Curriculum Vitae</string>
+    <string name="palabra3">ROBOT</string>
+    <string name="pista3">Automata</string>
 
-    <string name="palabra4">Rambo</string>
+    <string name="palabra4">ROCKY</string>
     <string name="pista4">Personaje de Sylvester Stallone</string>
 
-    <string name="palabra5">AAA</string>
+    <string name="palabra5">TIJUANA</string>
     <string name="pista5">Capital de Baja California</string>
 
-    <string name="palabra6"></string>
-    <string name="pista6"></string>
+    <string name="palabra6">JUAN</string>
+    <string name="pista6">Escutia, niño heroe</string>
 
-    <string name="palabra7"></string>
-    <string name="pista7"></string>
+    <string name="palabra7">TEQUILA</string>
+    <string name="pista7">Bebida alcoholica originaria de Mexico</string>
 
-    <string name="palabra8"></string>
-    <string name="pista8"></string>
+    <string name="palabra8">YOGURT</string>
+    <string name="pista8">Lacteo</string>
 
-    <string name="palabra9"></string>
-    <string name="pista9"></string>
+    <string name="palabra9">MEXICO</string>
+    <string name="pista9">Pais latino de Norteamerica</string>
 
-    <string name="palabra10"></string>
-    <string name="pista10"></string>
+    <string name="palabra10">ISAAC</string>
+    <string name="pista10">Martir de Córdoba, celebra su dia el 3 de junio</string>
 
     <!--Tag IDs-->
-    <string name="tag1">Tag 1</string>
-    <string name="tag2">Tag 2</string>
+    <string name="tag1">Palabra</string>
+    <string name="tag2">Letra</string>
 </resources>
