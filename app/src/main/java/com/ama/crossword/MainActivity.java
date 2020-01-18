@@ -3,6 +3,7 @@ package com.ama.crossword;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -387,8 +388,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         handler.removeCallbacks(timerRunnable);
-        if(v.getId() == R.id.btnReiniciar)
-            iniciar();
+        switch (v.getId()){
+            case R.id.btnReiniciar:
+                iniciar();
+                break;
+            case R.id.btnSubmit:
+                terminar();
+                break;
+        }
     }
 
     public void onTouchCasilla(View v){
@@ -427,5 +434,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 txtPista2.setText(palabras.get("vertical").getPista());
             }
         }
+    }
+
+    public void terminar(){
+        boolean fail = false;
+        for (int x = 0; x < 11; x++) {
+            for (int y = 0; y < 11; y++) {
+                String caracter;
+                try {
+                    caracter = casillas[x][y].getTag(R.string.tag2).toString().toUpperCase();
+                }catch (NullPointerException npe){
+                    caracter = null;
+                }
+
+                if(caracter != null)
+                    if(casillas[x][y].getText().toString().toUpperCase().equals(caracter))
+                        casillas[x][y].setBackgroundColor(getResources().getColor(R.color.colorCorrect));
+                    else {
+                        casillas[x][y].setBackgroundColor(getResources().getColor(R.color.colorWrong));
+                        fail = true;
+                    }
+            }
+        }
+
+
+        if(fail){
+            MediaPlayer player = MediaPlayer.create(this, R.raw.laugh);
+            player.start();
+        }else{
+            MediaPlayer player = MediaPlayer.create(this, R.raw.cheer);
+        }
+
     }
 }
