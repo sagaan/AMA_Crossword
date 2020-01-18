@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Crossword</string>
+    <string name="horizontalCAPS">HORIZONTAL</string>
+    <string name="verticalCAPS">VERTICAL</string>
+    <string name="btnReset">REINICIAR</string>
+    <string name="btnSubmit">TERMINAR</string>
+
+    <!--PALABRAS CRUCIGRAMA-->
+    <string name="palabra1">AAAA</string>
+    <string name="pista1">Apellido de Rocky</string>
+
+    <string name="palabra2">Diez</string>
+    <string name="pista2">Numero de mandamientos</string>
+
+    <string name="palabra3">CV</string>
+    <string name="pista3">Curriculum Vitae</string>
+
+    <string name="palabra4">Rambo</string>
+    <string name="pista4">Personaje de Sylvester Stallone</string>
+
+    <string name="palabra5">AAA</string>
+    <string name="pista5">Capital de Baja California</string>
+
+    <string name="palabra6"></string>
+    <string name="pista6"></string>
+
+    <string name="palabra7"></string>
+    <string name="pista7"></string>
+
+    <string name="palabra8"></string>
+    <string name="pista8"></string>
+
+    <string name="palabra9"></string>
+    <string name="pista9"></string>
+
+    <string name="palabra10"></string>
+    <string name="pista10"></string>
+
+    <!--Tag IDs-->
+    <string name="tag1">Tag 1</string>
+    <string name="tag2">Tag 2</string>
+</resources>
