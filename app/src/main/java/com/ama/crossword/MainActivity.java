@@ -437,6 +437,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void terminar(){
+        btnFinish.setEnabled(false);
         boolean fail = false;
         for (int x = 0; x < 11; x++) {
             for (int y = 0; y < 11; y++) {
@@ -463,6 +464,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             player.start();
         }else{
             MediaPlayer player = MediaPlayer.create(this, R.raw.cheer);
+            player.start();
         }
 
     }
