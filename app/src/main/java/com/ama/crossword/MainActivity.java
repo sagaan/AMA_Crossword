@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String[] columnas = {"a","b","c","d","e","f","g","h","i","j","k"};
     private EditText[][] casillas;
     private boolean[][] ocupada;
+    private MediaPlayer player;
 
     private Button btnReset, btnFinish;
 
@@ -84,8 +85,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        longClick = false;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(player != null) {
+            player.stop();
+            player.reset();
+            player.release();
+            player = null;
+        }
+    }
+
     public void iniciar(){
         boolean valido = true;
+        if(player != null) {
+            player.stop();
+            player.reset();
+            player.release();
+            player = null;
+        }
 
         List<Palabra> palabras = read();
         //Revisa que haya por lo menos 2 palabras en la lista
@@ -207,9 +225,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }while(!acomodo);
 
         List<Palabra> otrasPalabras = palabras.subList(1, palabras.size());
-        for (Palabra palabra: otrasPalabras)
-            if(gridCheck(palabra))
-                validCounter++;
+        List<Palabra> removePalabras;
+        do {
+            removePalabras = new ArrayList<>();
+
+            for (Palabra palabra : otrasPalabras)
+                if (gridCheck(palabra)) {
+                    validCounter++;
+                    removePalabras.add(palabra);
+                }
+
+            for(Palabra palabra : removePalabras){
+                otrasPalabras.remove(palabra);
+                System.err.println("Palabra: " + palabra.getPalabra());
+            }
+
+            System.err.println(otrasPalabras.size());
+
+        }while(removePalabras.size() != 0);
 
         if(validCounter < 2)
             valido = false;
@@ -460,10 +493,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         if(fail){
-            MediaPlayer player = MediaPlayer.create(this, R.raw.laugh);
+            player = MediaPlayer.create(this, R.raw.laugh);
             player.start();
         }else{
-            MediaPlayer player = MediaPlayer.create(this, R.raw.cheer);
+            player = MediaPlayer.create(this, R.raw.cheer);
             player.start();
         }
 
